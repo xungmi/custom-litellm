@@ -4361,6 +4361,20 @@ async def embeddings(  # noqa: PLR0915
         if user_model:
             data["model"] = user_model
 
+        # Call custom pre API hook if available
+        try:
+            from custom_callbacks import proxy_handler_instance  # local import to avoid global dependency
+
+            if hasattr(proxy_handler_instance, "log_pre_api_call"):
+                proxy_handler_instance.log_pre_api_call(
+                    model=data.get("model"),
+                    messages=data.get("messages"),
+                    kwargs=data,
+                )
+        except Exception as e:  # noqa: F841
+            # Don't block request on custom callback errors
+            verbose_proxy_logger.debug("custom log_pre_api_call error: %s", str(e))
+
         ### MODEL ALIAS MAPPING ###
         # check if model name in model alias map
         # get the actual model name
