@@ -22,7 +22,6 @@ litellm/proxy/_secret_config.yaml
 .aws-sam/
 litellm/tests/aiologs.log
 litellm/tests/exception_data.txt
-litellm/tests/config_*.yaml
 litellm/tests/langfuse.log
 langfuse.log
 .langfuse.log
@@ -87,7 +86,6 @@ litellm/proxy/db/migrations/*
 litellm/proxy/migrations/*config.yaml
 litellm/proxy/migrations/*
 litellm/proxy/to_delete_loadtest_work/*
-config.yaml
 tests/litellm/litellm_core_utils/llm_cost_calc/log.txt
 tests/test_custom_dir/*
 test.py
@@ -95,4 +93,3 @@ test.py
 litellm_config.yaml
 .cursor
 .vscode/launch.json
-litellm/proxy/to_delete_loadtest_work/*
