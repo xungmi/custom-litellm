@@ -23,6 +23,7 @@ async def user_api_key_auth_auto_mode(request: Request, api_key: str) -> Union[U
             param="api_key",
             code=401,
         )
+        
     except Exception:
         # 3. Nếu cả 2 fail -> trả về 401
         raise HTTPException(
@@ -30,12 +31,11 @@ async def user_api_key_auth_auto_mode(request: Request, api_key: str) -> Union[U
             detail="Unauthorized: Invalid API key",
         )
 
-
-async def user_api_key_auth_on_mode(request: Request, api_key: str) -> UserAPIKeyAuth: 
-    """
+"""
     Change in config.yaml:
         custom_auth: custom_auth.user_api_key_auth
-    """
+"""
+async def user_api_key_auth_on_mode(request: Request, api_key: str) -> UserAPIKeyAuth: 
     try: 
         modified_master_key = "sk-my-master-key"
         if api_key == modified_master_key:

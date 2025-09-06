@@ -2,7 +2,6 @@ import os
 import sys
 import traceback
 
-# this file is to test litellm/proxy
 
 sys.path.insert(
     0, os.path.abspath("../..")
