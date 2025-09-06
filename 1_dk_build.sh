@@ -1,0 +1,1 @@
+docker build -t litellm_effiai:v1 .      

@@ -2,7 +2,6 @@ import os
 import sys
 import traceback
 
-# this file is to test litellm/proxy
 
 sys.path.insert(
     0, os.path.abspath("../..")
@@ -67,8 +66,3 @@ class MyCustomHandler(CustomLogger):
 
 
 proxy_handler_instance = MyCustomHandler()
-
-
-# need to set litellm.callbacks = [customHandler] # on the proxy
-
-# litellm.success_callback = [async_on_succes_logger]
