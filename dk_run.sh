@@ -1,0 +1,1 @@
+docker run -d --gpus all --name litellmv1 -it -v $PWD:/app ghcr.io/berriai/litellm /bin/bash

@@ -67,8 +67,3 @@ class MyCustomHandler(CustomLogger):
 
 
 proxy_handler_instance = MyCustomHandler()
-
-
-# need to set litellm.callbacks = [customHandler] # on the proxy
-
-# litellm.success_callback = [async_on_succes_logger]
