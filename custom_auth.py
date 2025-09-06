@@ -1,68 +1,45 @@
-# from litellm.proxy._types import UserAPIKeyAuth
-# from fastapi import Request
-# from litellm.proxy.exceptions import ProxyException
-# from litellm.proxy.auth.litellm_api_key_auth import litellm_api_key_auth
-
-# async def user_api_key_auth(request: Request, api_key: str) -> UserAPIKeyAuth: 
-#     try: 
-#         #Checks custom auth first
-#         modified_master_key = "my-custom-key-xun"
-#         if api_key.startswith("my-custom-key"):
-#             return UserAPIKeyAuth(api_key=api_key)
-#         #If custom auth fails, checks litellm api key auth
-#         else:
-#             return await litellm_api_key_auth(request, api_key)
-#         #If both fail, returns 401
-#     except: 
-#         raise ProxyException(
-#         message="Unauthorized: Invalid API key",
-#         type="invalid_request_error",
-#         param="api_key",
-#         code=401,
-#     )
-
-from fastapi import Request
+from fastapi import HTTPException, Request
 from typing import Union
-from litellm.proxy._types import UserAPIKeyAuth
-from litellm.proxy.exceptions import ProxyException
-from litellm.proxy.auth.litellm_api_key_auth import litellm_api_key_auth
+from litellm.proxy._types import UserAPIKeyAuth, ProxyException
 
-# (tuỳ chọn) strict list cho custom keys
-CUSTOM_KEYS = {
-    "my-custom-key-xun": {"user_id": "xun", "team_id": "team-001"},
-    "my-custom-key-abc": {"user_id": "abc", "team_id": "team-002"},
-}
 
-async def user_api_key_auth(request: Request, api_key: str) -> Union[UserAPIKeyAuth, str]:
+async def user_api_key_auth_auto_mode(request: Request, api_key: str) -> Union[UserAPIKeyAuth, str]:
     """
     Flow:
       1) Check custom key
       2) Nếu fail -> fallback sang LiteLLM API key auth
       3) Nếu cả hai fail -> 401
     """
-    # ---- 1) Custom auth ----
-    # Nếu muốn strict: dùng dict lookup thay vì startswith
-    record = CUSTOM_KEYS.get(api_key)
-    if record:
-        # Trả về tối thiểu api_key; có thể bổ sung user_id, team_id, quota...
-        return UserAPIKeyAuth(
-            api_key=api_key,
-            user_id=record["user_id"],
-            team_id=record["team_id"],
-            # quota_limit=..., quota_used=...
-        )
-
-    # ---- 2) Fallback: LiteLLM built-in api key auth ----
     try:
-        return await litellm_api_key_auth(request, api_key)
-    except ProxyException as e:
-        # Giữ nguyên lỗi có ý nghĩa từ built-in auth (ví dụ 403, 429)
-        raise e
-    except Exception:
-        # ---- 3) Cả hai fail -> 401 chuẩn ----
+        # ---- 1) Check custom key auth----
+        custom_key = "my-custom-key-xun"
+        if api_key == custom_key:
+            return UserAPIKeyAuth(api_key=api_key)
+        
+        # ---- 2) If check custom key fail => raise exception to fallback: LiteLLM built-in api key auth ----
         raise ProxyException(
-            message="Unauthorized: Invalid API key",
+            message="Invalid custom key, fallback to litellm",
             type="invalid_request_error",
             param="api_key",
             code=401,
         )
+        
+    except Exception:
+        # 3. Nếu cả 2 fail -> trả về 401
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized: Invalid API key",
+        )
+
+"""
+    Change in config.yaml:
+        custom_auth: custom_auth.user_api_key_auth
+"""
+async def user_api_key_auth_on_mode(request: Request, api_key: str) -> UserAPIKeyAuth: 
+    try: 
+        modified_master_key = "sk-my-master-key"
+        if api_key == modified_master_key:
+            return UserAPIKeyAuth(api_key=api_key)
+        raise Exception
+    except:
+        raise Exception
