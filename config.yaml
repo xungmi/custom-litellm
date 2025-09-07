@@ -3,30 +3,33 @@ model_list:
     litellm_params:
       model: gemini/gemini-1.5-flash
       api_key: os.environ/GEMINI_API_KEY
-  - model_name: rerank-english-v3.0
+      rpm: 6
+  - model_name: ollama-llama31-chat
     litellm_params:
-      model: rerank-english-v3.0
-      api_base: https://api.cohere.com/v1
-      api_key: os.environ/COHERE_API_KEY
-      api_type: cohere
+      model: ollama/llama3.1:latest
+      api_base: http://host.docker.internal:11434  # nếu Proxy chạy trong Docker
+
 litellm_settings:
   set_verbose: true 
-  # sets litellm.callbacks = [proxy_handler_instance]
   callbacks: custom_callbacks.proxy_handler_instance
   drop_params: True
 
+
 general_settings:
-  master_key: sk-1234   # Virtual key cho client gọi vào Proxy
+  master_key: os.environ/LITELLM_MASTER_KEY   # Virtual key cho client gọi vào Proxy
+  database_url: os.environ/DATABASE_URL
+  port: os.environ/PORT
+  # store_model_in_db: os.environ/STORE_MODEL_IN_DB
 
-  pass_through_endpoints:
-    - path: "/v1/text-to-image"                        # Route expose ra từ LiteLLM
-      target: "https://engine.prod.bria-api.com/v1/text-to-image/base/2.3"
-      headers:
-        Authorization: "Bearer os.environ/BRIA_API_KEY"   # Đọc key từ biến môi trường
-        content-type: application/json
-        accept: application/json
-      forward_headers: true
+  # pass_through_endpoints:
+  #   - path: "/v1/text-to-image"                        # Route expose ra từ LiteLLM
+  #     target: "https://engine.prod.bria-api.com/v1/text-to-image/base/2.3"
+  #     headers:
+  #       Authorization: "Bearer os.environ/BRIA_API_KEY"   # Đọc key từ biến môi trường
+  #       content-type: application/json
+  #       accept: application/json
+  #     forward_headers: true
 
-  custom_auth: custom_auth.user_api_key_auth
+  custom_auth: custom_auth.user_api_key_auth_auto_mode
   custom_auth_settings:
     mode: "auto" # can be 'on', 'off', 'auto' - 'auto' checks both litellm api key auth + custom auth
