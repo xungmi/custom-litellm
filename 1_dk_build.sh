@@ -1,1 +1,1 @@
-docker build -t litellm_effiai:v1 .      
+docker build -t xungmi/litellm:v1 .      

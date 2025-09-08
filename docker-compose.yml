@@ -4,8 +4,10 @@ services:
       context: .
       args:
         target: runtime
-    image: litellm_effiai:v1
-    network_mode: host
+    image: xungmi/litellm:v1
+    container_name: litellm_proxy
+    volumes:
+     - .:/app
     #########################################
     ## Uncomment these lines to start proxy with a config.yaml file ##
     # volumes:
@@ -49,6 +51,7 @@ services:
 
   prometheus:
     image: prom/prometheus
+    container_name: litellm_prometheus
     volumes:
       - prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml

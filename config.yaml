@@ -1,13 +1,20 @@
 model_list:
-  - model_name: gemini-1.5-flash
+  - model_name: gemini-1.5-flash-1
     litellm_params:
       model: gemini/gemini-1.5-flash
       api_key: os.environ/GEMINI_API_KEY
-      rpm: 6
-  - model_name: ollama-llama31-chat
-    litellm_params:
-      model: ollama/llama3.1:latest
-      api_base: http://host.docker.internal:11434  # nếu Proxy chạy trong Docker
+      rpm: 1
+  # - model_name: gemini-1.5-flash-2
+  #   litellm_params:
+  #     model: gemini/gemini-1.5-flash
+  #     api_key: os.environ/GEMINI_API_KEY
+  #     rpm: 2
+  # - model_name: deepseek-v3.1
+  #   litellm_params:
+  #     model: openrouter/deepseek-v3.1
+  #     api_base: https://openrouter.ai/api/v1/chat/completions
+  #     api_key: os.environ/DEEPSEEK_API_KEY
+
 
 litellm_settings:
   set_verbose: true 
@@ -17,8 +24,8 @@ litellm_settings:
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY   # Virtual key cho client gọi vào Proxy
-  database_url: os.environ/DATABASE_URL
-  port: os.environ/PORT
+  # database_url: os.environ/DATABASE_URL
+  # port: os.environ/PORT
   # store_model_in_db: os.environ/STORE_MODEL_IN_DB
 
   # pass_through_endpoints:

@@ -1,0 +1,12 @@
+- Các bước xử lý trên host (trước khi chạy docker compose up)
+    - Bước 1: Gán quyền thực thi: 
+        - chmod +x docker/prod_entrypoint.sh
+        - ls -l docker/prod_entrypoint.sh
+    - Bước 2: Đảm bảo script dùng line ending:
+        - sudo apt install dos2unix 
+        - dos2unix docker/prod_entrypoint.sh
+    - Bước 3: Kiểm tra shebang dòng đầu:
+        - head -n 1 docker/prod_entrypoint.sh
+    - Bước 4: Chạy lại Docker Compose
+        - docker compose up --build -d
+
