@@ -12,8 +12,8 @@ services:
     ## Uncomment these lines to start proxy with a config.yaml file ##
     # volumes:
     #  - ./config.yaml:/app/config.yaml <<- this is missing in the docker-compose file currently
-    # command:
-    #  - "--config=/app/config.yaml"
+    command:
+     - "--config=/app/config.yaml"
     ##############################################
     ports:
       - "4000:4000" # Map the container port to the host, change the host port if necessary
@@ -24,6 +24,7 @@ services:
       - .env # Load local .env file
     depends_on:
       - db  # Indicates that this service depends on the 'db' service, ensuring 'db' starts first
+      - ollama
     # healthcheck:  # Defines the health check configuration for the container
     #   test: [ "CMD-SHELL", "wget --no-verbose --tries=1 http://localhost:4000/health/liveliness || exit 1" ]  # Command to execute for health check
     #   interval: 30s  # Perform health check every 30 seconds
@@ -62,9 +63,22 @@ services:
       - "--storage.tsdb.path=/prometheus"
       - "--storage.tsdb.retention.time=15d"
     restart: always
+    
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    # ports:
+      # - "11434:11434"              # chỉ cần nếu muốn gọi từ host/bên ngoài
+    environment:
+      OLLAMA_HOST: "0.0.0.0:11434" # QUAN TRỌNG: lắng nghe trong network
+      OLLAMA_KEEP_ALIVE: "24h"
+    volumes:
+      - ollama:/root/.ollama       # lưu model, tránh tải lại
+    restart: unless-stopped
 
-volumes:
+volumes: # defines (and names) the volumes that services can mount to store data persistently.
   prometheus_data:
     driver: local
   postgres_data:
     name: litellm_postgres_data # Named volume for Postgres data persistence
+  ollama: {}
