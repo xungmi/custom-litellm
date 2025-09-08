@@ -1,5 +1,5 @@
   docker run -d -it -p 4000:4000 \
-  --name litellm_effiaiv1 \
+  --name xungmi/litellm:v1 \
   -v $PWD:/app \
   --entrypoint /bin/bash \
-  litellm_effiai:v1
+  xungmi/litellm:v1
