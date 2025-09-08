@@ -1,29 +1,38 @@
 model_list:
-  - model_name: gemini-1.5-flash-1
+  # GOOGLE GEMINI
+  - model_name: gemini
     litellm_params: # Specifies the model name, help LiteLLM to route to the correct model + provider logic on the backend.
       model: gemini/gemini-1.5-flash
       api_key: os.environ/GEMINI_API_KEY
       rpm: 1                            # support load balancing or usage-based routing, not applyed for rate limit
-  - model_name: gemini-1.5-flash-2
+  - model_name: gemini
     litellm_params:
       model: gemini/gemini-1.5-flash
       api_key: os.environ/GEMINI_API_KEY
       rpm: 2
+  # OLLAMA
   - model_name: llama3
     litellm_params:
       model: "ollama/llama3:latest"
       api_base: "http://ollama:11434"
       api_key: "NA"
-  - model_name: deepseek-v3.1
+  #GROK : https://console.groq.com/home
+  - model_name: groq
     litellm_params:
-      model: openrouter/deepseek-v3.1
-      api_base: https://openrouter.ai/api/v1/chat/completions
-      api_key: os.environ/DEEPSEEK_API_KEY
-  - model_name: deepseek-chat
+      model: "meta-llama/llama-4-scout-17b-16e-instruct"
+      api_base: "https://api.groq.com/openai/v1"
+      api_key: os.environ/GROQ_API_KEY
+  - model_name: groq
     litellm_params:
-      model: deepseek/deepseek-chat:free
+      model: llama-3.3-70b-versatile
+      api_base: https://api.groq.com/openai/v1"
+      api_key: os.environ/GROQ_API_KEY
+  # OPENROUTER
+  - model_name: openrouter
+    litellm_params:
+      model: openrouter/openai/gpt-4o-mini
       api_base: https://openrouter.ai/api/v1/chat/completions
-      api_key: os.environ/DEEPSEEK_API_KEY_2
+      api_key: os.environ/OPENROUTER_API_KEY
 
 
 litellm_settings:
